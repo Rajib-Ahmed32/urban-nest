@@ -10,9 +10,12 @@ const buttonVariants = cva(
       variant: {
         default: "",
         login: "bg-primary text-white px-4 py-2 rounded-lg hover:bg-hover",
+        destructive:
+          "bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:opacity-90",
       },
       size: {
         default: "",
+        md: "h-10 w-20",
         lg: "h-10 px-6 text-base",
       },
     },

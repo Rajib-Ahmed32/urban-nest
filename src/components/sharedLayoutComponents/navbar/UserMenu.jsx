@@ -9,75 +9,54 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const baseNavStyle =
-  "text-primary text-base duration-200 ease-in-out font-semibold transition-all hover:text-hover";
-
 export const UserMenu = ({ user, setUser, mobile = false }) => {
   const isLoggedIn = !!user;
 
-  if (isLoggedIn) {
-    if (mobile) {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <img
-              src={user.avatar}
-              alt="Profile"
-              className="w-10 h-10 rounded-full cursor-pointer"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <NavLink
-                to="/dashboard/user"
-                className={({ isActive }) =>
-                  `${baseNavStyle} ${isActive ? "text-hover" : ""}`
-                }
-              >
-                Dashboard
-              </NavLink>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <button
-                onClick={() => setUser(null)}
-                className={`${baseNavStyle} w-full text-left`}
-              >
-                Logout
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
+  const menuStyles = "w-48 bg-white rounded shadow p-2 text-gray-800";
 
+  const itemLinkStyles = ({ isActive }) =>
+    `block px-3 py-2 rounded hover:bg-gray-100 ${
+      isActive ? "text-primary font-semibold" : ""
+    }`;
+
+  if (isLoggedIn) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <img
             src={user.avatar}
             alt="Profile"
-            className="w-11 h-11 rounded-full cursor-pointer"
+            className={
+              mobile
+                ? "w-10 h-10 rounded-full cursor-pointer"
+                : "w-10 h-10 rounded-full cursor-pointer"
+            }
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+
+        <DropdownMenuContent align="end" className={menuStyles}>
+          <DropdownMenuLabel className="px-3 text-sm font-semibold">
+            {user.name}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
+
           <DropdownMenuItem asChild>
-            <NavLink to="/dashboard/user" className={baseNavStyle}>
+            <NavLink to="/dashboard/user" className={itemLinkStyles}>
               Dashboard
             </NavLink>
           </DropdownMenuItem>
+
           <DropdownMenuSeparator />
+
           <DropdownMenuItem>
-            <button
+            <Button
               onClick={() => setUser(null)}
-              className={`${baseNavStyle} w-full text-left`}
+              variant="outline"
+              size="sm"
+              className="w-full justify-start rounded"
             >
               Logout
-            </button>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -88,7 +67,7 @@ export const UserMenu = ({ user, setUser, mobile = false }) => {
     return (
       <Link
         to="/login"
-        className="px-4 py-2 text-sm font-medium rounded-md bg-primary text-white hover:bg-hover"
+        className="px-4 py-2 text-sm font-medium rounded bg-primary text-white hover:bg-primary-dark"
       >
         Login
       </Link>
@@ -96,7 +75,7 @@ export const UserMenu = ({ user, setUser, mobile = false }) => {
   }
 
   return (
-    <Button asChild size="md" variant="login">
+    <Button asChild variant="login" size="sm">
       <Link to="/login">Login</Link>
     </Button>
   );

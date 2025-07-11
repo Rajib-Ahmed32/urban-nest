@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   Sheet,
@@ -15,10 +15,8 @@ import UrbanNestLogo from "./UrbanNestLogo";
 import { NavLinks } from "./NavLinks";
 import { UserMenu } from "./UserMenu";
 
-const baseNavStyle =
-  "text-primary text-base duration-200 ease-in-out font-semibold transition-all hover:text-hover";
-
 const Navbar = () => {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [user, setUser] = useState({
     name: "Rajib Ahmed",
     avatar: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
@@ -41,39 +39,58 @@ const Navbar = () => {
 
         <div className="lg:hidden flex items-center gap-4">
           <UserMenu user={user} setUser={setUser} mobile />
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Open menu">
-                <Menu className="h-10 w-10" />
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Open menu"
+                className="
+                h-10 w-10
+                rounded-md
+                border border-gray-300
+                hover:bg-gray-100
+                dark:border-gray-600
+                dark:hover:bg-gray-800
+                transition
+              "
+              >
+                <Menu className="h-6 w-6 text-gray-700 dark:text-gray-300" />
               </Button>
             </SheetTrigger>
+
             <SheetContent className="w-[260px] sm:w-[300px]">
               <SheetHeader>
                 <SheetTitle>
-                  <Link to="/" className="flex items-center gap-2">
+                  <Link
+                    to="/"
+                    className="flex items-center gap-2"
+                    onClick={() => setIsSheetOpen(false)}
+                  >
                     <UrbanNestLogo />
                   </Link>
                 </SheetTitle>
               </SheetHeader>
 
               <div className="flex flex-col mt-6 gap-4">
-                <NavLinks mobile />
+                <NavLinks
+                  mobile
+                  setIsSheetOpen={setIsSheetOpen}
+                  className="nav-link"
+                />
                 {user && (
                   <>
-                    <NavLink
-                      to="/dashboard/user"
-                      className={({ isActive }) =>
-                        `${baseNavStyle} ${isActive ? "text-hover" : ""}`
-                      }
-                    >
-                      Dashboard
-                    </NavLink>
-                    <button
-                      onClick={() => setUser(null)}
-                      className={`${baseNavStyle} w-full text-left`}
+                    <Button
+                      onClick={() => {
+                        setUser(null);
+                        setIsSheetOpen(false);
+                      }}
+                      variant="destructive"
+                      size="md"
+                      className="mt-2"
                     >
                       Logout
-                    </button>
+                    </Button>
                   </>
                 )}
               </div>
