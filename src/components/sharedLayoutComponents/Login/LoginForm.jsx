@@ -2,29 +2,77 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Globe, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { loginUser, loginWithGoogle } from "../../../services/auth";
 
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    reset();
+    setLoading(true);
+    try {
+      const user = await loginUser({
+        email: data.email,
+        password: data.password,
+      });
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${user.displayName || user.email}!`,
+      });
+      reset();
+      navigate("/");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: err.message,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const user = await loginWithGoogle();
+      toast({
+        title: "Logged in with Google",
+        description: `Welcome, ${user.displayName || user.email}!`,
+      });
+      navigate("/");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Google login failed",
+        description: err.message,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <Loader2 className="animate-spin w-12 h-12 text-white" />
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
@@ -33,6 +81,7 @@ const LoginForm = () => {
             placeholder="Enter your email"
             className="bg-[#e8f0fe]"
             {...register("email", { required: "Email is required" })}
+            disabled={loading}
           />
           {errors.email && (
             <p className="text-destructive text-sm mt-1">
@@ -49,6 +98,7 @@ const LoginForm = () => {
             placeholder="Enter your password"
             className="bg-[#e8f0fe]"
             {...register("password", { required: "Password is required" })}
+            disabled={loading}
           />
           {errors.password && (
             <p className="text-destructive text-sm mt-1">
@@ -65,9 +115,9 @@ const LoginForm = () => {
         <Button
           type="submit"
           className="w-full py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
-          disabled={isSubmitting}
+          disabled={loading}
         >
-          {isSubmitting ? "Logging in..." : "Login"}
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
 
@@ -81,6 +131,7 @@ const LoginForm = () => {
         type="button"
         onClick={handleGoogleLogin}
         className="w-[220px] mx-auto text-xs flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        disabled={loading}
       >
         <Globe className="h-4 w-4 text-red-600" />
         <span className="font-semibold text-sm">Continue with Google</span>

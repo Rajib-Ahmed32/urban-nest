@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Globe } from "lucide-react";
+import { Globe, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
@@ -11,13 +11,14 @@ import { registerUser, loginWithGoogle } from "../../../services/auth";
 
 const RegisterForm = () => {
   const [uploadedImage, setUploadedImage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
@@ -39,6 +40,8 @@ const RegisterForm = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       const user = await registerUser({
         name: data.name,
@@ -58,15 +61,20 @@ const RegisterForm = () => {
         title: "Registration failed",
         description: err.message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleRegister = async () => {
+    setLoading(true);
     try {
       const user = await loginWithGoogle();
       toast({
         title: "Registered with Google",
-        description: `Welcome, ${user.displayName}! Your account has been created.`,
+        description: `Welcome, ${
+          user.displayName || user.email
+        }! Your account has been created.`,
       });
       navigate("/");
     } catch (err) {
@@ -75,11 +83,19 @@ const RegisterForm = () => {
         title: "Google registration failed",
         description: err.message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-white" />
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <div>
           <Label htmlFor="name">Name</Label>
@@ -89,6 +105,7 @@ const RegisterForm = () => {
             placeholder="Full Name"
             className="bg-[#e8f0fe]"
             {...register("name", { required: "Name is required" })}
+            disabled={loading}
           />
           {errors.name && (
             <p className="text-destructive text-sm mt-1">
@@ -105,6 +122,7 @@ const RegisterForm = () => {
             placeholder="Email address"
             className="bg-[#e8f0fe]"
             {...register("email", { required: "Email is required" })}
+            disabled={loading}
           />
           {errors.email && (
             <p className="text-destructive text-sm mt-1">
@@ -115,7 +133,7 @@ const RegisterForm = () => {
 
         <div>
           <Label htmlFor="upload">Upload Photo</Label>
-          <ImageUploader onImageUpload={setUploadedImage} />
+          <ImageUploader onImageUpload={setUploadedImage} disabled={loading} />
         </div>
 
         <div>
@@ -129,6 +147,7 @@ const RegisterForm = () => {
               required: "Password is required",
               validate: validatePassword,
             })}
+            disabled={loading}
           />
           {errors.password && (
             <p className="text-destructive text-sm mt-1">
@@ -140,9 +159,9 @@ const RegisterForm = () => {
         <Button
           type="submit"
           className="w-full py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
-          disabled={isSubmitting}
+          disabled={loading}
         >
-          {isSubmitting ? "Registering..." : "Register"}
+          {loading ? "Registering..." : "Register"}
         </Button>
       </form>
 
@@ -156,6 +175,7 @@ const RegisterForm = () => {
         type="button"
         onClick={handleGoogleRegister}
         className="w-[220px] mx-auto text-xs flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        disabled={loading}
       >
         <Globe className="h-4 w-4 text-red-600" />
         <span className="font-semibold text-sm">Continue with Google</span>

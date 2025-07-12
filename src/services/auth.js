@@ -2,6 +2,7 @@ import app from "../firebase/firebase.config";
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   updateProfile,
@@ -28,4 +29,13 @@ export const registerUser = async ({ name, email, password, photoURL }) => {
 export const loginWithGoogle = async () => {
   const result = await signInWithPopup(auth, googleProvider);
   return result.user;
+};
+
+export const loginUser = async ({ email, password }) => {
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  return userCredential.user;
 };
