@@ -3,14 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Globe, Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { loginUser, loginWithGoogle } from "../../../services/auth";
+import { getUserFromDB } from "../../../services/userAPI";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   const {
@@ -27,12 +27,16 @@ const LoginForm = () => {
         email: data.email,
         password: data.password,
       });
+
+      const dbUser = await getUserFromDB(user.email);
+      console.log("Logged-in user from DB:", dbUser);
+
       toast({
         title: "Login successful",
-        description: `Welcome back, ${user.displayName || user.email}!`,
+        description: `Welcome back, ${dbUser?.name || dbUser?.email}!`,
       });
+
       reset();
-      navigate("/");
     } catch (err) {
       toast({
         variant: "destructive",
@@ -48,11 +52,14 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const user = await loginWithGoogle();
+
+      const dbUser = await getUserFromDB(user.email);
+      console.log("Google user from DB:", dbUser);
+
       toast({
         title: "Logged in with Google",
-        description: `Welcome, ${user.displayName || user.email}!`,
+        description: `Welcome, ${dbUser?.name || dbUser?.email}!`,
       });
-      navigate("/");
     } catch (err) {
       toast({
         variant: "destructive",

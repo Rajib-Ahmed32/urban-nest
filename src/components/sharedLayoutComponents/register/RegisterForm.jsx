@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import ImageUploader from "./ImageUploader";
 import { registerUser, loginWithGoogle } from "../../../services/auth";
+import { saveUserToDB } from "../../../services/userAPI";
 
 const RegisterForm = () => {
   const [uploadedImage, setUploadedImage] = useState("");
@@ -50,6 +51,18 @@ const RegisterForm = () => {
         photoURL: uploadedImage,
       });
 
+      await saveUserToDB({
+        name: data.name,
+        email: data.email,
+        photoURL: uploadedImage,
+        role: "user",
+      });
+
+      toast({
+        title: "Registration successful",
+        description: `Welcome, ${user.displayName}!`,
+      });
+
       toast({
         title: "Registration successful",
         description: `Welcome, ${user.displayName}!`,
@@ -70,6 +83,12 @@ const RegisterForm = () => {
     setLoading(true);
     try {
       const user = await loginWithGoogle();
+      await saveUserToDB({
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        role: "user",
+      });
       toast({
         title: "Registered with Google",
         description: `Welcome, ${
