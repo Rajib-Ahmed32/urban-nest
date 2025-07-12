@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ImageIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
-const imgbbAPIKey = "6800fddb055e129639313b627d087ba8";
+const imgbbAPIKey = import.meta.env.VITE_IMGBB_API_KEY;
 
 const ImageUploader = ({ onImageUpload }) => {
   const [uploading, setUploading] = useState(false);
@@ -58,12 +58,14 @@ const ImageUploader = ({ onImageUpload }) => {
     <div>
       <label
         htmlFor="upload"
-        className={`flex items-center gap-2 w-full px-3 py-2 text-sm border border-input rounded-md transition focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-[#e8f0fe] text-foreground ${
-          uploading ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        className={`flex items-center gap-2 w-full h-12 px-3 text-sm border border-input rounded-md transition 
+        focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-[#e8f0fe] text-foreground
+        cursor-pointer select-none
+        ${uploading ? "opacity-50 cursor-not-allowed" : ""}
+      `}
       >
-        <ImageIcon className="w-4 h-4" />
-        <span>
+        <ImageIcon className="w-5 h-5" />
+        <span className="text-gray-500 select-none">
           {uploading
             ? "Uploading..."
             : uploadedImage
@@ -71,6 +73,7 @@ const ImageUploader = ({ onImageUpload }) => {
             : "Click to upload image"}
         </span>
       </label>
+
       <input
         id="upload"
         type="file"
