@@ -3,12 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import ImageUploader from "./ImageUploader";
+import { registerUser, loginWithGoogle } from "../../../services/auth";
 
 const RegisterForm = () => {
   const [uploadedImage, setUploadedImage] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const {
     register,
@@ -25,19 +29,53 @@ const RegisterForm = () => {
     return true;
   };
 
-  const handleGoogleRegister = () => {
-    console.log("Google register clicked");
-  };
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!uploadedImage) {
-      alert("Please upload an image.");
+      toast({
+        variant: "destructive",
+        title: "Upload required",
+        description: "Please upload an image.",
+      });
       return;
     }
 
-    data.photoURL = uploadedImage;
+    try {
+      const user = await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        photoURL: uploadedImage,
+      });
 
-    console.log("Final Register Data:", data);
+      toast({
+        title: "Registration successful",
+        description: `Welcome, ${user.displayName}!`,
+      });
+      navigate("/");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Registration failed",
+        description: err.message,
+      });
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    try {
+      const user = await loginWithGoogle();
+      toast({
+        title: "Registered with Google",
+        description: `Welcome, ${user.displayName}! Your account has been created.`,
+      });
+      navigate("/");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Google registration failed",
+        description: err.message,
+      });
+    }
   };
 
   return (
@@ -113,6 +151,7 @@ const RegisterForm = () => {
         <span className="text-xs">OR</span>
         <div className="h-px bg-border w-full" />
       </div>
+
       <Button
         type="button"
         onClick={handleGoogleRegister}
