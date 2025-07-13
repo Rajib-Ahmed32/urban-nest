@@ -1,15 +1,13 @@
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import apiClient from "./apiClient";
 
 export const saveUserToDB = async (user) => {
-  const res = await axios.post(`${BASE_URL}/users`, user);
+  const res = await apiClient.post("/users", user);
   return res.data;
 };
 
 export const getUserFromDB = async (email) => {
   try {
-    const res = await axios.get(`${BASE_URL}/users`, {
+    const res = await apiClient.get("/users", {
       params: { email },
     });
     return res.data;
