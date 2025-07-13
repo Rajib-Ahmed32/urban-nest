@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -7,16 +8,13 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { loginUser, loginWithGoogle } from "../../../services/auth";
-import { getUserFromDB } from "../../../services/userAPI";
-
-// Import your auth context hook
+import { getUserFromDB, saveUserToDB } from "../../../services/userAPI";
 import { useAuth } from "../../../context/AuthContext";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  // Destructure login from your AuthContext
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   const {
@@ -29,23 +27,18 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // Step 1: Authenticate user with backend/auth service
       const user = await loginUser({
         email: data.email,
         password: data.password,
       });
-
-      // Step 2: Fetch full user data (including role) from your DB
       const dbUser = await getUserFromDB(user.email);
-
-      // Step 3: Update AuthContext state
       login(dbUser);
 
       toast({
         title: "Login successful",
         description: `Welcome back, ${dbUser?.name || dbUser?.email}!`,
       });
-
+      navigate(`/dashboard/${dbUser.role}`);
       reset();
     } catch (err) {
       toast({
@@ -62,16 +55,29 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const user = await loginWithGoogle();
+      let dbUser = await getUserFromDB(user.email);
 
-      const dbUser = await getUserFromDB(user.email);
+      if (!dbUser) {
+        await saveUserToDB({
+          name: user.displayName,
+          email: user.email,
+          photoURL:
+            user.photoURL ||
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          role: "user",
+        });
 
-      // Update AuthContext state here as well
+        dbUser = await getUserFromDB(user.email);
+      }
+
       login(dbUser);
 
       toast({
-        title: "Logged in with Google",
+        title: "Login successful",
         description: `Welcome, ${dbUser?.name || dbUser?.email}!`,
       });
+
+      navigate(`/dashboard/${dbUser.role}`);
     } catch (err) {
       toast({
         variant: "destructive",

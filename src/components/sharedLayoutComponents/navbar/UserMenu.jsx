@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-export const UserMenu = ({ user, setUser, mobile = false }) => {
+export const UserMenu = ({ user, logout, mobile = false }) => {
   const isLoggedIn = !!user;
 
   const menuStyles = "w-48 bg-white rounded shadow p-2 text-gray-800";
@@ -24,24 +24,24 @@ export const UserMenu = ({ user, setUser, mobile = false }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <img
-            src={user.avatar}
-            alt="Profile"
-            className={
-              mobile
-                ? "w-10 h-10 rounded-full cursor-pointer"
-                : "w-10 h-10 rounded-full cursor-pointer"
+            src={
+              user?.photoURL ||
+              user?.avatar ||
+              "https://cdn-icons-png.flaticon.com/512/149/149071.png"
             }
+            alt="User Avatar"
+            className="w-8 h-8 rounded-full object-cover"
           />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className={menuStyles}>
           <DropdownMenuLabel className="px-3 text-sm font-semibold">
-            {user.name}
+            {user.name || user.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <NavLink to="/dashboard/user" className={itemLinkStyles}>
+            <NavLink to={`/dashboard/${user.role}`} className={itemLinkStyles}>
               Dashboard
             </NavLink>
           </DropdownMenuItem>
@@ -50,7 +50,7 @@ export const UserMenu = ({ user, setUser, mobile = false }) => {
 
           <DropdownMenuItem>
             <Button
-              onClick={() => setUser(null)}
+              onClick={logout}
               variant="outline"
               size="sm"
               className="w-full justify-start rounded"

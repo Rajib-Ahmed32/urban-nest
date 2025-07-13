@@ -14,13 +14,11 @@ import { Button } from "@/components/ui/button";
 import UrbanNestLogo from "./UrbanNestLogo";
 import { NavLinks } from "./NavLinks";
 import { UserMenu } from "./UserMenu";
+import { useAuth } from "../../../context/AuthContext";
 
 const Navbar = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [user, setUser] = useState({
-    name: "Rajib Ahmed",
-    avatar: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
-  });
+  const { user, logout } = useAuth();
 
   return (
     <nav className="flex justify-center items-center border-b bg-background text-foreground sticky top-0 z-50">
@@ -34,26 +32,18 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-6">
-          <UserMenu user={user} setUser={setUser} />
+          <UserMenu user={user} logout={logout} />
         </div>
 
         <div className="lg:hidden flex items-center gap-4">
-          <UserMenu user={user} setUser={setUser} mobile />
+          <UserMenu user={user} logout={logout} mobile />
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
                 aria-label="Open menu"
-                className="
-                h-10 w-10
-                rounded-md
-                border border-gray-300
-                hover:bg-gray-100
-                dark:border-gray-600
-                dark:hover:bg-gray-800
-                transition
-              "
+                className="h-10 w-10 rounded-md border border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800 transition"
               >
                 <Menu className="h-6 w-6 text-gray-700 dark:text-gray-300" />
               </Button>
@@ -79,19 +69,17 @@ const Navbar = () => {
                   className="nav-link"
                 />
                 {user && (
-                  <>
-                    <Button
-                      onClick={() => {
-                        setUser(null);
-                        setIsSheetOpen(false);
-                      }}
-                      variant="destructive"
-                      size="md"
-                      className="mt-2"
-                    >
-                      Logout
-                    </Button>
-                  </>
+                  <Button
+                    onClick={() => {
+                      logout();
+                      setIsSheetOpen(false);
+                    }}
+                    variant="destructive"
+                    size="md"
+                    className="mt-2"
+                  >
+                    Logout
+                  </Button>
                 )}
               </div>
             </SheetContent>

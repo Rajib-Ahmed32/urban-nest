@@ -1,25 +1,27 @@
 import { useForm } from "react-hook-form";
+import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Globe, Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
 import ImageUploader from "./ImageUploader";
 import { registerUser, loginWithGoogle } from "../../../services/auth";
-import { saveUserToDB } from "../../../services/userAPI";
+import { saveUserToDB, getUserFromDB } from "../../../services/userAPI";
 
 const RegisterForm = () => {
   const [uploadedImage, setUploadedImage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
@@ -63,11 +65,12 @@ const RegisterForm = () => {
         description: `Welcome, ${user.displayName}!`,
       });
 
-      toast({
-        title: "Registration successful",
-        description: `Welcome, ${user.displayName}!`,
-      });
-      navigate("/");
+      reset();
+      setUploadedImage("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       toast({
         variant: "destructive",
@@ -83,19 +86,23 @@ const RegisterForm = () => {
     setLoading(true);
     try {
       const user = await loginWithGoogle();
+
       await saveUserToDB({
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
         role: "user",
       });
+
+      const dbUser = await getUserFromDB(user.email);
+      login(dbUser);
+
       toast({
         title: "Registered with Google",
-        description: `Welcome, ${
-          user.displayName || user.email
-        }! Your account has been created.`,
+        description: `Welcome, ${dbUser.name || dbUser.email}!`,
       });
-      navigate("/");
+
+      navigate(`/dashboard/${dbUser.role}`);
     } catch (err) {
       toast({
         variant: "destructive",
