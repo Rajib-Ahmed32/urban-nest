@@ -1,4 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
+import PrivateRoute from "../routes/PrivateRoute";
+import Unauthorized from "@/components/commonReusableComponents/Unauthorized";
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -43,37 +45,53 @@ const Router = createBrowserRouter([
   },
   {
     path: "/dashboard/user",
-    element: <UserDashboardLayout />,
+    element: <PrivateRoute allowedRoles={["user"]} />,
     children: [
-      { index: true, element: <UserProfile /> },
-      { path: "profile", element: <UserProfile /> },
-      { path: "announcements", element: <UserAnnouncements /> },
+      {
+        element: <UserDashboardLayout />,
+        children: [
+          { index: true, element: <UserProfile /> },
+          { path: "profile", element: <UserProfile /> },
+          { path: "announcements", element: <UserAnnouncements /> },
+        ],
+      },
     ],
   },
   {
     path: "/dashboard/member",
-    element: <MemberDashboardLayout />,
+    element: <PrivateRoute allowedRoles={["member"]} />,
     children: [
-      { index: true, element: <MemberProfile /> },
-      { path: "profile", element: <MemberProfile /> },
-      { path: "make-payment", element: <MakePayment /> },
-      { path: "payment-history", element: <PaymentHistory /> },
-      { path: "announcements", element: <MemberAnnouncements /> },
+      {
+        element: <MemberDashboardLayout />,
+        children: [
+          { index: true, element: <MemberProfile /> },
+          { path: "profile", element: <MemberProfile /> },
+          { path: "make-payment", element: <MakePayment /> },
+          { path: "payment-history", element: <PaymentHistory /> },
+          { path: "announcements", element: <MemberAnnouncements /> },
+        ],
+      },
     ],
   },
   {
     path: "/dashboard/admin",
-    element: <AdminDashboardLayout />,
+    element: <PrivateRoute allowedRoles={["admin"]} />,
     children: [
-      { index: true, element: <AdminProfile /> },
-      { path: "profile", element: <AdminProfile /> },
-      { path: "manage-members", element: <ManageMembers /> },
-      { path: "make-announcement", element: <MakeAnnouncement /> },
-      { path: "agreement-requests", element: <AgreementRequests /> },
-      { path: "manage-coupons", element: <ManageCoupons /> },
+      {
+        element: <AdminDashboardLayout />,
+        children: [
+          { index: true, element: <AdminProfile /> },
+          { path: "profile", element: <AdminProfile /> },
+          { path: "manage-members", element: <ManageMembers /> },
+          { path: "make-announcement", element: <MakeAnnouncement /> },
+          { path: "agreement-requests", element: <AgreementRequests /> },
+          { path: "manage-coupons", element: <ManageCoupons /> },
+        ],
+      },
     ],
   },
   { path: "*", element: <NotFound /> },
+  { path: "/unauthorized", element: <Unauthorized /> },
 ]);
 
 export default Router;

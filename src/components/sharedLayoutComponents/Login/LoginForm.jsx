@@ -9,9 +9,15 @@ import { useState } from "react";
 import { loginUser, loginWithGoogle } from "../../../services/auth";
 import { getUserFromDB } from "../../../services/userAPI";
 
+// Import your auth context hook
+import { useAuth } from "../../../context/AuthContext";
+
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  // Destructure login from your AuthContext
+  const { login } = useAuth();
 
   const {
     register,
@@ -23,13 +29,17 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      // Step 1: Authenticate user with backend/auth service
       const user = await loginUser({
         email: data.email,
         password: data.password,
       });
 
+      // Step 2: Fetch full user data (including role) from your DB
       const dbUser = await getUserFromDB(user.email);
-      console.log("Logged-in user from DB:", dbUser);
+
+      // Step 3: Update AuthContext state
+      login(dbUser);
 
       toast({
         title: "Login successful",
@@ -54,7 +64,9 @@ const LoginForm = () => {
       const user = await loginWithGoogle();
 
       const dbUser = await getUserFromDB(user.email);
-      console.log("Google user from DB:", dbUser);
+
+      // Update AuthContext state here as well
+      login(dbUser);
 
       toast({
         title: "Logged in with Google",
