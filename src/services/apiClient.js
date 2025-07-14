@@ -7,17 +7,21 @@ const apiClient = axios.create({
   baseURL: BASE_URL,
 });
 
+const publicRoutes = ["/apartments"];
+
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = getCurrentToken();
+    if (publicRoutes.some((route) => config.url?.startsWith(route))) {
+      return config;
+    }
+
+    const token = await getCurrentToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default apiClient;
