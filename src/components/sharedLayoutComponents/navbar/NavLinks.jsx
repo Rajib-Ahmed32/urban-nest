@@ -6,7 +6,7 @@ const navItems = [
 ];
 
 const baseNavStyle =
-  "text-primary text-base duration-200 ease-in-out font-semibold transition-all hover:text-hover";
+  "text-primary-foreground text-base duration-200 ease-in-out font-semibold transition-all hover:text-hover";
 
 const activeNavStyleDesktop =
   "underline underline-offset-[30px] decoration-4 decoration-hover";

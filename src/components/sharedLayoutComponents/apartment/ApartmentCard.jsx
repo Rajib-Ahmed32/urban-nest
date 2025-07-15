@@ -15,7 +15,7 @@ export default function ApartmentCard({
   onAgreementClick,
 }) {
   return (
-    <Card className="flex flex-col shadow-lg rounded-lg overflow-hidden">
+    <Card className="flex flex-col bg-[#f8f8f6] shadow-lg rounded-lg overflow-hidden">
       <CardHeader className="p-0">
         <img
           src={apt.image}
@@ -25,12 +25,16 @@ export default function ApartmentCard({
       </CardHeader>
       <CardContent className="p-4 flex-1 flex flex-col justify-between">
         <div className="space-y-1">
-          <CardTitle className="text-lg">
+          <CardTitle className="text-lg text-[#373536]">
             Apartment No: {apt.apartmentNo}
           </CardTitle>
-          <CardDescription>Floor: {apt.floor}</CardDescription>
-          <CardDescription>Block: {apt.block}</CardDescription>
-          <CardDescription className="font-semibold text-gray-700">
+          <CardDescription className="text-[#373536]">
+            Floor: {apt.floor}
+          </CardDescription>
+          <CardDescription className="text-[#373536]">
+            Block: {apt.block}
+          </CardDescription>
+          <CardDescription className="font-semibold text-[#373536]">
             Rent: ৳{apt.rent}
           </CardDescription>
         </div>
@@ -38,25 +42,25 @@ export default function ApartmentCard({
         {alreadyRequested ? (
           <Button
             disabled
-            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-100 text-green-700 border border-green-300 cursor-not-allowed"
+            className="w-full mt-4 mx-auto py-2 px-4 flex items-center justify-center gap-2 bg-green-100 text-green-700 border border-green-300 cursor-not-allowed"
           >
-            <CheckCircle className="h-4 w-4" />
+            <CheckCircle className="h-4 w-4 text-[#dd4b08]" />
             Already Requested
           </Button>
         ) : (
           <Button
-            className="w-full mt-4 flex items-center justify-center gap-2 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            className="w-full mx-auto py-2 px-4 mt-4 flex items-center justify-center gap-2 bg-[#373536] text-white hover:bg-[#b63a06] disabled:bg-gray-400 disabled:cursor-not-allowed transition"
             onClick={() => onAgreementClick(apt._id)}
             disabled={agreeingId === apt._id}
           >
             {agreeingId === apt._id ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-white" />
                 Submitting...
               </>
             ) : (
               <>
-                <Handshake className="h-4 w-4" />
+                <Handshake className="h-4 w-4 text-white" />
                 Agreement
               </>
             )}

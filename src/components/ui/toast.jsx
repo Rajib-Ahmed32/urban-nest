@@ -1,6 +1,8 @@
+// toast.js
 import React from "react";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { cn } from "../../lib/utils";
+import { Info, CheckCircle, AlertCircle } from "lucide-react";
 
 const ToastProvider = ToastPrimitive.Provider;
 
@@ -18,16 +20,34 @@ const Toast = React.forwardRef(({ className, ...props }, ref) => (
 ));
 Toast.displayName = ToastPrimitive.Root.displayName;
 
-const ToastTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <ToastPrimitive.Title
-    ref={ref}
-    className={cn(
-      "text-lg font-bold tracking-tight text-gray-900 dark:text-white",
-      className
-    )}
-    {...props}
-  />
-));
+const ToastIcon = ({ variant }) => {
+  switch (variant) {
+    case "success":
+      return <CheckCircle className="h-5 w-5 text-green-600" />;
+    case "destructive":
+      return <AlertCircle className="h-5 w-5 text-red-600" />;
+    default:
+      return <Info className="h-5 w-5 text-blue-600" />;
+  }
+};
+
+const ToastTitle = React.forwardRef(
+  ({ className, icon, children, ...props }, ref) => (
+    <div className="flex items-center gap-2">
+      {icon && <ToastIcon variant={icon} />}
+      <ToastPrimitive.Title
+        ref={ref}
+        className={cn(
+          "text-lg font-bold tracking-tight text-gray-900 dark:text-white",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </ToastPrimitive.Title>
+    </div>
+  )
+);
 ToastTitle.displayName = ToastPrimitive.Title.displayName;
 
 const ToastDescription = React.forwardRef(({ className, ...props }, ref) => (

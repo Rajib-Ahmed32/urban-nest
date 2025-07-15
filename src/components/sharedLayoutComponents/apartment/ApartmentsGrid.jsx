@@ -7,7 +7,7 @@ export default function ApartmentsGrid({
   onAgreementClick,
 }) {
   return (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {apartments.map((apt) => {
         const alreadyRequested = userAgreement?.apartmentNo === apt.apartmentNo;
 

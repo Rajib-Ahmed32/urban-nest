@@ -1,6 +1,6 @@
 const UrbanNestLogo = () => {
   return (
-    <div className="flex items-center gap-1 md:gap-2">
+    <div className="flex items-center gap-1 md:gap-1">
       <svg
         width="40"
         height="40"
@@ -14,7 +14,7 @@ const UrbanNestLogo = () => {
           width="12"
           height="34"
           rx="2"
-          fill="hsl(219,81%,37%)"
+          fill="hsl(20.2, 94.2%, 47.6%)"
         />
         <rect
           x="26"
@@ -22,7 +22,7 @@ const UrbanNestLogo = () => {
           width="12"
           height="42"
           rx="2"
-          fill="hsl(219,81%,37%)"
+          fill="hsl(20.2, 94.2%, 47.6%)"
         />
         <rect
           x="42"
@@ -30,17 +30,14 @@ const UrbanNestLogo = () => {
           width="12"
           height="28"
           rx="2"
-          fill="hsl(96,86%,50%)"
+          fill="hsl(20.2, 94.2%, 47.6%)"
         />
-        <path
-          d="M8 52c8 6 24 10 48 0"
-          stroke="hsl(96,86%,50%)"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
+        <path d="M8 52c8 6 24 10 48 0" strokeWidth="4" strokeLinecap="round" />
       </svg>
-      <span className="text-2xl font-bold">
-        <span className="text-[hsl(219,81%,37%)]">UrbanNest</span>
+
+      <span className="text-2xl font-bold flex">
+        <span className="text-[hsl(20.2,94.2%,47.6%)]">Urban</span>
+        <span className="text-[hsl(30,3%,21%)]">Nest</span>
       </span>
     </div>
   );

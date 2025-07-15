@@ -93,7 +93,7 @@ export default function Apartment() {
       toast({
         title: "Agreement Submitted",
         description: "Note: One user can only request one apartment.",
-        variant: "default",
+        variant: "error",
       });
 
       const apartment = data.apartments.find((apt) => apt._id === apartmentId);
@@ -102,7 +102,7 @@ export default function Apartment() {
       queryClient.invalidateQueries(["agreements"]);
     } catch (error) {
       toast({
-        title: "Error",
+        title: "Unable to Proceed",
         description:
           error.response?.data?.message || "Failed to submit agreement.",
         variant: "destructive",
@@ -132,40 +132,40 @@ export default function Apartment() {
     );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <RentFilter
-        minRent={minRent}
-        maxRent={maxRent}
-        onMinChange={(e) => setMinRent(e.target.value)}
-        onMaxChange={(e) => setMaxRent(e.target.value)}
-        onSearch={handleSearch}
-      />
+    <div className="bg-[#eaedf0]">
+      <div className="p-6 max-w-7xl mx-auto">
+        <RentFilter
+          minRent={minRent}
+          maxRent={maxRent}
+          onMinChange={(e) => setMinRent(e.target.value)}
+          onMaxChange={(e) => setMaxRent(e.target.value)}
+          onSearch={handleSearch}
+        />
 
-      <ApartmentsGrid
-        apartments={data.apartments}
-        userAgreement={userAgreement}
-        agreeingId={agreeingId}
-        onAgreementClick={handleAgreement}
-      />
-
-      {/* Pagination */}
-      <div className="mt-10 flex justify-center gap-2 flex-wrap">
-        {[...Array(totalPages)].map((_, idx) => {
-          const pageNumber = idx + 1;
-          return (
-            <Button
-              key={pageNumber}
-              onClick={() => setPage(pageNumber)}
-              className={`w-10 h-10 p-0 text-sm font-semibold rounded-md ${
-                page === pageNumber
-                  ? "bg-blue-600 text-white"
-                  : "bg-white border border-gray-300 text-gray-700"
-              } hover:bg-blue-500 hover:text-white`}
-            >
-              {pageNumber}
-            </Button>
-          );
-        })}
+        <ApartmentsGrid
+          apartments={data.apartments}
+          userAgreement={userAgreement}
+          agreeingId={agreeingId}
+          onAgreementClick={handleAgreement}
+        />
+        <div className="mt-10 flex justify-center gap-2 flex-wrap">
+          {[...Array(totalPages)].map((_, idx) => {
+            const pageNumber = idx + 1;
+            return (
+              <Button
+                key={pageNumber}
+                onClick={() => setPage(pageNumber)}
+                className={`w-10 h-10 p-0 text-sm font-semibold rounded-md transition ${
+                  page === pageNumber
+                    ? "bg-[#dd4b08] text-white"
+                    : "bg-white border border-[#dd4b08] text-[#dd4b08]"
+                } hover:bg-[#dd4b08] hover:text-white`}
+              >
+                {pageNumber}
+              </Button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="flex justify-center items-center border-b bg-background text-foreground sticky top-0 z-50">
+    <nav className="flex justify-center items-center border-b bg-[#f9f9f7] text-foreground sticky top-0 z-50">
       <div className="container min-h-[75px] md:max-w-6xl lg:max-w-7xl mx-auto px-3 md:px-6 md:min-h-[80px] flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <UrbanNestLogo />
