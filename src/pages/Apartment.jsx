@@ -33,7 +33,7 @@ export default function Apartment() {
   const [agreeingId, setAgreeingId] = useState(null);
   const [userAgreement, setUserAgreement] = useState(null);
 
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, loading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const limit = 6;
@@ -55,14 +55,38 @@ export default function Apartment() {
 
   useEffect(() => {
     const getAgreement = async () => {
-      if (firebaseUser) {
-        const token = await firebaseUser.getIdToken();
-        const agreement = await fetchUserAgreement(token);
-        setUserAgreement(agreement);
-      }
+      if (!firebaseUser) return;
+
+      const token = await firebaseUser.getIdToken();
+      const agreement = await fetchUserAgreement(token);
+      setUserAgreement(agreement);
     };
     getAgreement();
   }, [firebaseUser]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-white" />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-white" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <Message type="error" text="Failed to load apartments." />;
+  }
+
+  if (!data?.apartments?.length) {
+    return <Message type="info" text="No apartments available." />;
+  }
 
   const handleSearch = () => {
     setFilter({ minRent: minRent || "", maxRent: maxRent || "" });
@@ -114,23 +138,6 @@ export default function Apartment() {
 
   const totalPages = data?.total ? Math.ceil(data.total / limit) : 1;
 
-  if (isLoading)
-    return (
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-white" />
-      </div>
-    );
-
-  if (error)
-    return (
-      <Message text="Failed to load apartments." className="text-red-500" />
-    );
-
-  if (!data?.apartments?.length)
-    return (
-      <Message text="No apartments available." className="text-gray-600" />
-    );
-
   return (
     <div className="bg-[#eaedf0]">
       <div className="p-6 max-w-7xl mx-auto">
@@ -148,6 +155,7 @@ export default function Apartment() {
           agreeingId={agreeingId}
           onAgreementClick={handleAgreement}
         />
+
         <div className="mt-10 flex justify-center gap-2 flex-wrap">
           {[...Array(totalPages)].map((_, idx) => {
             const pageNumber = idx + 1;
@@ -155,11 +163,14 @@ export default function Apartment() {
               <Button
                 key={pageNumber}
                 onClick={() => setPage(pageNumber)}
-                className={`w-10 h-10 p-0 text-sm font-semibold rounded-md transition ${
-                  page === pageNumber
-                    ? "bg-[#dd4b08] text-white"
-                    : "bg-white border border-[#dd4b08] text-[#dd4b08]"
-                } hover:bg-[#dd4b08] hover:text-white`}
+                className={`w-10 h-10 p-0 text-sm font-semibold rounded-md transition
+                  ${
+                    page === pageNumber
+                      ? "bg-[#dd4b08] text-white"
+                      : "bg-transparent border border-[#dd4b08] text-[#dd4b08]"
+                  }
+                  hover:bg-[#dd4b08] hover:text-white
+                `}
               >
                 {pageNumber}
               </Button>

@@ -8,8 +8,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { UserCircle2 } from "lucide-react";
 
-const PRIMARY_ORANGE = "#dd4b08";
-
 export const UserMenu = ({ user, logout, mobile = false }) => {
   const isLoggedIn = !!user;
 
@@ -49,11 +47,8 @@ export const UserMenu = ({ user, logout, mobile = false }) => {
           <DropdownMenuItem className="p-0 border-b-2 border-gray-700">
             <NavLink
               to={`/dashboard/${user.role}`}
-              className={({ isActive }) =>
-                `w-full block rounded-none bg-[#373536] text-white font-semibold px-6 py-3
-                hover:bg-[#dd4b08] hover:text-white transition-colors
-                ${isActive ? "bg-[#dd4b08]" : ""}`
-              }
+              className="w-full block rounded-none bg-[#373536] text-white font-semibold px-6 py-3
+               hover:bg-[#dd4b08] hover:text-white transition-colors"
             >
               Dashboard
             </NavLink>
@@ -62,7 +57,8 @@ export const UserMenu = ({ user, logout, mobile = false }) => {
           <DropdownMenuItem className="p-0">
             <Button
               onClick={logout}
-              className="w-full px-6 py-3 rounded-none bg-[#373536] text-white font-semibold hover:bg-[#dd4b08] hover:text-white text-left justify-start"
+              className="w-full px-6 py-3 rounded-none bg-[#373536] text-white font-semibold
+               hover:bg-[#dd4b08] hover:text-white text-left justify-start"
             >
               Logout
             </Button>

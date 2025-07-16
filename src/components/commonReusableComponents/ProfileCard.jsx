@@ -2,12 +2,7 @@ import React from "react";
 import { CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const ProfileCard = ({
-  user,
-  data = [],
-  title = "User Profile",
-  avatarSize = "w-20 h-20",
-}) => {
+const ProfileCard = ({ user, data = [], avatarSize = "w-20 h-20" }) => {
   const textColor = "#373634";
 
   return (
