@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../services/apiClient";
+import { Loader2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Message from "../../components/commonReusableComponents/Message";
@@ -50,7 +51,11 @@ const MakePayment = () => {
   };
 
   if (authLoading || isLoading) {
-    return <Message type="info" text="Loading agreement details..." />;
+    return (
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-white" />
+      </div>
+    );
   }
 
   if (error) {
@@ -92,7 +97,6 @@ const MakePayment = () => {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Member Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Member Email
@@ -105,7 +109,6 @@ const MakePayment = () => {
             />
           </div>
 
-          {/* Floor */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Floor
@@ -118,7 +121,6 @@ const MakePayment = () => {
             />
           </div>
 
-          {/* Block Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Block Name
@@ -130,8 +132,6 @@ const MakePayment = () => {
               className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
             />
           </div>
-
-          {/* Apartment / Room No */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Apartment / Room No
@@ -144,7 +144,6 @@ const MakePayment = () => {
             />
           </div>
 
-          {/* Rent */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Rent Amount
@@ -157,7 +156,6 @@ const MakePayment = () => {
             />
           </div>
 
-          {/* Month Selector */}
           <div>
             <label
               htmlFor="month"
@@ -182,7 +180,6 @@ const MakePayment = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="w-full bg-[#373634] hover:bg-[#bf3f06] text-white py-3 px-4 rounded-md text-sm mt-4"

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "../../services/apiClient";
 
-const CouponInput = ({ rentAmount, token, onApply }) => {
+const CouponInput = ({ rentAmount, onApply }) => {
   const [couponCode, setCouponCode] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -20,10 +20,7 @@ const CouponInput = ({ rentAmount, token, onApply }) => {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        `/coupons/validate/${couponCode.trim()}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `/coupons/validate/${couponCode.trim()}`
       );
 
       if (data.valid) {
@@ -70,7 +67,7 @@ const CouponInput = ({ rentAmount, token, onApply }) => {
         htmlFor="coupon"
         className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
       >
-        Coupon Code
+        Coupon Code (optional)
       </label>
       <div className="flex gap-2">
         <input
