@@ -24,6 +24,7 @@ import MemberProfile from "../dashboard/member/MemberProfile";
 import MakePayment from "../dashboard/member/MakePayment";
 import PaymentHistory from "../dashboard/member/PaymentHistory";
 import MemberAnnouncements from "../dashboard/member/Announcements";
+import PaymentSuccess from "@/components/memberDashboardPageComponents/PaymentSuccess";
 
 // Admin Dashboard Pages
 import AdminProfile from "../dashboard/admin/AdminProfile";
@@ -31,6 +32,7 @@ import ManageMembers from "../dashboard/admin/ManageMembers";
 import MakeAnnouncement from "../dashboard/admin/MakeAnnouncement";
 import AgreementRequests from "../dashboard/admin/AgreementRequests";
 import ManageCoupons from "../dashboard/admin/ManageCoupons";
+import PaymentCheckoutPage from "../components/memberDashboardPageComponents/PaymentCheckoutPage";
 
 const Router = createBrowserRouter([
   {
@@ -69,6 +71,8 @@ const Router = createBrowserRouter([
           { path: "make-payment", element: <MakePayment /> },
           { path: "payment-history", element: <PaymentHistory /> },
           { path: "announcements", element: <MemberAnnouncements /> },
+          { path: "checkout", element: <PaymentCheckoutPage /> },
+          { path: "payment-success", element: <PaymentSuccess /> },
         ],
       },
     ],
