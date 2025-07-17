@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import axios from "../../services/apiClient";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import CouponInput from "./CouponInput";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -22,13 +23,39 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-const Paymentcheckout = ({ agreement, month, token }) => {
+const PaymentCheckout = ({ agreement, month, token }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const rentAmount = agreement?.rent || 0;
+  const userEmail = agreement?.userEmail;
+
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [discountedRent, setDiscountedRent] = useState(rentAmount);
   const [couponCode, setCouponCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+
+  const handleCouponApply = ({
+    success,
+    code,
+    percentage,
+    discountedAmount,
+  }) => {
+    if (success) {
+      setCouponApplied(true);
+      setCouponCode(code);
+      setDiscountPercentage(percentage);
+      setDiscountedRent(discountedAmount);
+    } else {
+      setCouponApplied(false);
+      setCouponCode("");
+      setDiscountPercentage(0);
+      setDiscountedRent(rentAmount);
+    }
+  };
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -45,24 +72,13 @@ const Paymentcheckout = ({ agreement, month, token }) => {
     setLoading(true);
 
     try {
-      const rentAmount = agreement?.rent;
-      const userEmail = agreement?.userEmail;
-
-      if (!rentAmount || !userEmail) {
-        toast({
-          title: "Missing Data",
-          description: "Missing payment details.",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
+      const amountInCents = Math.round(discountedRent * 100);
 
       const { data } = await axios.post(
         "/payment/create-payment-intent",
         {
-          amount: rentAmount * 100,
-          couponCode: couponCode.trim() || null,
+          amount: amountInCents,
+          couponCode: couponApplied ? couponCode : null,
           month,
           email: userEmail,
         },
@@ -77,9 +93,7 @@ const Paymentcheckout = ({ agreement, month, token }) => {
       const paymentResult = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
-          billing_details: {
-            email: userEmail,
-          },
+          billing_details: { email: userEmail },
         },
       });
 
@@ -89,7 +103,6 @@ const Paymentcheckout = ({ agreement, month, token }) => {
           description: paymentResult.error.message || "Payment failed",
           variant: "destructive",
         });
-        setLoading(false);
         return;
       }
 
@@ -98,30 +111,25 @@ const Paymentcheckout = ({ agreement, month, token }) => {
           "/payment/save",
           {
             agreementId: agreement._id,
-            rent: rentAmount,
+            rent: discountedRent,
             transactionId: paymentResult.paymentIntent.id,
             month,
             date: new Date(),
             userEmail,
-            couponUsed: couponCode.trim() || null,
+            couponUsed: couponApplied ? couponCode : null,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         toast({
           title: "Success",
           description: "Payment completed successfully.",
         });
+
         navigate("/dashboard/member/payment-success", {
           state: { transactionId: paymentResult.paymentIntent.id },
-        });
-        setCouponCode("");
-      } else {
-        toast({
-          title: "Error",
-          description: "Payment was not successful.",
-          variant: "destructive",
         });
       }
     } catch (err) {
@@ -157,23 +165,11 @@ const Paymentcheckout = ({ agreement, month, token }) => {
           Complete Your Payment
         </h2>
 
-        <div>
-          <label
-            htmlFor="coupon"
-            className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Coupon Code (optional)
-          </label>
-          <input
-            id="coupon"
-            type="text"
-            value={couponCode}
-            onChange={(e) => setCouponCode(e.target.value)}
-            placeholder="Enter coupon code"
-            disabled={loading}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-          />
-        </div>
+        <CouponInput
+          rentAmount={rentAmount}
+          token={token}
+          onApply={handleCouponApply}
+        />
 
         <div>
           <label
@@ -199,8 +195,12 @@ const Paymentcheckout = ({ agreement, month, token }) => {
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" /> Processing...
             </span>
+          ) : couponApplied ? (
+            `Pay ৳${Math.round(
+              discountedRent
+            )} (with ${discountPercentage}% off)`
           ) : (
-            `Pay ৳${agreement?.rent}`
+            `Pay ৳${rentAmount}`
           )}
         </Button>
       </form>
@@ -208,4 +208,4 @@ const Paymentcheckout = ({ agreement, month, token }) => {
   );
 };
 
-export default Paymentcheckout;
+export default PaymentCheckout;
