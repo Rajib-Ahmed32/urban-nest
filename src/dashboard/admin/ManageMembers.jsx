@@ -43,19 +43,23 @@ const ManageMembers = () => {
 
   const { mutate: removeMember, isLoading: removing } = useMutation({
     mutationFn: async (email) => {
-      const res = await axios.patch(
+      await axios.patch(
         `/remove-member/${email}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      return res.data;
+      await axios.delete(`/payment/user/${email}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return email;
     },
     onSuccess: () => {
       toast({
         title: "Member removed",
-        description: "Member removed successfully!",
+        description: "Member and related coupons removed successfully!",
         variant: "success",
       });
       queryClient.invalidateQueries(["members"]);
@@ -63,7 +67,7 @@ const ManageMembers = () => {
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to remove member.",
+        description: "Failed to remove member or delete coupons.",
         variant: "destructive",
       });
     },
