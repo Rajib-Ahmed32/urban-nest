@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import Paymentcheckout from "./Paymentcheckout";
+import PaymentCheckout from "./PaymentCheckout";
 import Message from "../commonReusableComponents/Message";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -17,9 +17,9 @@ const PaymentCheckoutPage = () => {
   }
 
   return (
-    <div className="p-8 rounded-md">
+    <div className="p-8 max-w-lg mx-auto rounded-lg bg-white dark:bg-gray-900 shadow-lg">
       <Elements stripe={stripePromise}>
-        <Paymentcheckout agreement={agreement} month={month} token={token} />
+        <PaymentCheckout agreement={agreement} month={month} token={token} />
       </Elements>
     </div>
   );

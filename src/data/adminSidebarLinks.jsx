@@ -1,12 +1,7 @@
-import React from "react";
 import { User, Users, Megaphone, FileCheck, Percent } from "lucide-react";
 
 export const adminSidebarLinks = [
-  {
-    path: "/dashboard/admin/profile",
-    label: "Admin Profile",
-    icon: <User />,
-  },
+  { path: "/dashboard/admin/profile", label: "Admin Profile", icon: <User /> },
   {
     path: "/dashboard/admin/manage-members",
     label: "Manage Members",

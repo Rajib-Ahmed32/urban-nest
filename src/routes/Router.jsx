@@ -25,6 +25,7 @@ import MakePayment from "../dashboard/member/MakePayment";
 import PaymentHistory from "../dashboard/member/PaymentHistory";
 import MemberAnnouncements from "../dashboard/member/Announcements";
 import PaymentSuccess from "@/components/memberDashboardPageComponents/PaymentSuccess";
+import MemberNotice from "../dashboard/member/MemberNotice";
 
 // Admin Dashboard Pages
 import AdminProfile from "../dashboard/admin/AdminProfile";
@@ -73,6 +74,7 @@ const Router = createBrowserRouter([
           { path: "announcements", element: <MemberAnnouncements /> },
           { path: "checkout", element: <PaymentCheckoutPage /> },
           { path: "payment-success", element: <PaymentSuccess /> },
+          { path: "member-notices", element: <MemberNotice /> },
         ],
       },
     ],

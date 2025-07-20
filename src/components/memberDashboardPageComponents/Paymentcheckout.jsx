@@ -103,6 +103,7 @@ const PaymentCheckout = ({ agreement, month, token }) => {
           description: paymentResult.error.message || "Payment failed",
           variant: "destructive",
         });
+        setLoading(false);
         return;
       }
 
@@ -148,7 +149,7 @@ const PaymentCheckout = ({ agreement, month, token }) => {
     <>
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg flex items-center gap-3">
+          <div className="dark:bg-gray-900 p-6 rounded-lg flex items-center gap-3">
             <Loader2 className="animate-spin text-orange-600" size={24} />
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               Processing Payment...
@@ -159,9 +160,9 @@ const PaymentCheckout = ({ agreement, month, token }) => {
 
       <form
         onSubmit={handleCheckout}
-        className="max-w-md mx-auto bg-[#f8f8f6] dark:bg-gray-900 p-6 rounded-lg shadow-md space-y-6"
+        className="max-w-md mx-auto bg-white dark:bg-gray-900 p-8 rounded-lg space-y-6"
       >
-        <h2 className="text-xl font-semibold text-center text-[#ea580c] dark:text-white">
+        <h2 className="text-2xl font-semibold text-center text-[#ec5407] dark:text-white">
           Complete Your Payment
         </h2>
 
@@ -188,7 +189,7 @@ const PaymentCheckout = ({ agreement, month, token }) => {
 
         <Button
           type="submit"
-          className="w-full bg-[#373634] hover:bg-orange-700 text-white py-3 rounded-md font-semibold"
+          className="w-full bg-[#373634] hover:bg-[#ec5407] text-white py-3 rounded-md font-semibold transition"
           disabled={!stripe || loading}
         >
           {loading ? (

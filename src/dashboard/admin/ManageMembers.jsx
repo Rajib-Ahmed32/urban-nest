@@ -4,9 +4,10 @@ import axios from "../../services/apiClient";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import Message from "../../components/commonReusableComponents/Message";
+import PageWrapper from "../../components/commonReusableComponents/PageWrapper";
 
 const fetchMembers = async (token) => {
   const res = await axios.get("/members", {
@@ -18,6 +19,8 @@ const fetchMembers = async (token) => {
 const ManageMembers = () => {
   const { firebaseUser, loading: authLoading } = useAuth();
   const [token, setToken] = useState(null);
+  const [removingEmail, setRemovingEmail] = useState(null);
+  const [confirmationMsg, setConfirmationMsg] = useState(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -41,8 +44,10 @@ const ManageMembers = () => {
     enabled: !!token,
   });
 
-  const { mutate: removeMember, isLoading: removing } = useMutation({
+  const { mutate: removeMember } = useMutation({
     mutationFn: async (email) => {
+      setRemovingEmail(email);
+
       await axios.patch(
         `/remove-member/${email}`,
         {},
@@ -50,26 +55,43 @@ const ManageMembers = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      await axios.delete(`/payment/user/${email}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+
+      try {
+        await axios.delete(`/payment/user/${email}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        if (err.response?.status !== 404) {
+          throw err;
+        }
+      }
 
       return email;
     },
-    onSuccess: () => {
+    onSuccess: (email) => {
+      queryClient.setQueryData(["members"], (old) =>
+        old ? old.filter((m) => m.email !== email) : []
+      );
+
+      const removedMember = members.find((m) => m.email === email);
+      const name = removedMember?.name || email;
+
       toast({
-        title: "Member removed",
-        description: "Member and related coupons removed successfully!",
+        title: "Member Access Removed",
+        description: `${name} has been removed as a member and now has user access only.`,
         variant: "success",
+        duration: 3000,
       });
-      queryClient.invalidateQueries(["members"]);
+
+      setRemovingEmail(null);
     },
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to remove member or delete coupons.",
+        description: "Failed to remove member to user",
         variant: "destructive",
       });
+      setRemovingEmail(null);
     },
   });
 
@@ -88,10 +110,10 @@ const ManageMembers = () => {
   }
 
   return (
-    <div className="md:p-12">
-      <Card className="bg-[#f9f9f7]">
+    <PageWrapper>
+      <Card className="shadow-lg border rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-center text-2xl text-[#ec5407]">
+          <CardTitle className="text-2xl font-semibold text-orange-600 text-center">
             Manage Members
           </CardTitle>
         </CardHeader>
@@ -99,39 +121,64 @@ const ManageMembers = () => {
           {members.length === 0 ? (
             <Message type="info" text="No records found." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border">
-                <thead className="bg-gray-100 text-xs uppercase">
-                  <tr>
-                    <th className="px-4 py-2">Name</th>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {members.map((member) => (
-                    <tr key={member._id} className="border-t">
-                      <td className="px-4 py-2">{member.name}</td>
-                      <td className="px-4 py-2">{member.email}</td>
-                      <td className="px-4 py-2">
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled={removing}
-                          onClick={() => removeMember(member.email)}
-                        >
-                          {removing ? "Removing..." : "Remove"}
-                        </Button>
-                      </td>
+            <>
+              <div className="overflow-x-auto rounded-lg">
+                <table className="w-full text-sm text-left border-separate border-spacing-y-2">
+                  <thead className="bg-gray-50 text-gray-600 font-medium text-xs">
+                    <tr>
+                      <th className="px-4 py-2">Name</th>
+                      <th className="px-4 py-2">Email</th>
+                      <th className="px-4 py-2 text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {members.map((member) => (
+                      <tr
+                        key={member._id}
+                        className="bg-white hover:shadow-md transition-shadow rounded-md"
+                      >
+                        <td className="px-4 py-3 rounded-l-md">
+                          {member.name}
+                        </td>
+                        <td className="px-4 py-3">{member.email}</td>
+                        <td className="px-4 py-3 text-right rounded-r-md">
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            disabled={removingEmail === member.email}
+                            onClick={() => removeMember(member.email)}
+                          >
+                            {removingEmail === member.email ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                                Removing...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Remove
+                              </>
+                            )}
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {confirmationMsg && (
+                <div className="mt-6 flex justify-center">
+                  <div className="text-sm bg-green-100 border border-green-300 text-green-700 px-4 py-2 rounded-md shadow-sm">
+                    {confirmationMsg}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageWrapper>
   );
 };
 

@@ -1,14 +1,15 @@
-// toast.js
+// components/ui/toast.js
 import React from "react";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { cn } from "../../lib/utils";
-import { Info, CheckCircle, AlertCircle } from "lucide-react";
+import { Info, CheckCircle, AlertCircle, X } from "lucide-react";
 
 const ToastProvider = ToastPrimitive.Provider;
 
 const Toast = React.forwardRef(({ className, ...props }, ref) => (
   <ToastPrimitive.Root
     ref={ref}
+    duration={7000}
     className={cn(
       "group pointer-events-auto relative flex w-full max-w-2xl items-start gap-4 rounded-2xl border border-gray-200 bg-white/90 px-8 py-6 shadow-2xl ring-1 ring-black/10 backdrop-blur-md transition-all",
       "data-[state=open]:animate-slide-in-top data-[state=closed]:animate-fade-out",
@@ -23,17 +24,17 @@ Toast.displayName = ToastPrimitive.Root.displayName;
 const ToastIcon = ({ variant }) => {
   switch (variant) {
     case "success":
-      return <CheckCircle className="h-5 w-5 text-green-600" />;
+      return <CheckCircle className="h-6 w-6 text-green-600" />;
     case "destructive":
-      return <AlertCircle className="h-5 w-5 text-red-600" />;
+      return <AlertCircle className="h-6 w-6 text-red-600" />;
     default:
-      return <Info className="h-5 w-5 text-blue-600" />;
+      return <Info className="h-6 w-6 text-blue-600" />;
   }
 };
 
 const ToastTitle = React.forwardRef(
   ({ className, icon, children, ...props }, ref) => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       {icon && <ToastIcon variant={icon} />}
       <ToastPrimitive.Title
         ref={ref}
@@ -62,6 +63,14 @@ const ToastDescription = React.forwardRef(({ className, ...props }, ref) => (
 ));
 ToastDescription.displayName = ToastPrimitive.Description.displayName;
 
+const ToastClose = () => (
+  <ToastPrimitive.Close asChild>
+    <button className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white">
+      <X className="h-5 w-5" />
+    </button>
+  </ToastPrimitive.Close>
+);
+
 const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
   <ToastPrimitive.Viewport
     ref={ref}
@@ -74,4 +83,11 @@ const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
 ));
 ToastViewport.displayName = ToastPrimitive.Viewport.displayName;
 
-export { ToastProvider, Toast, ToastTitle, ToastDescription, ToastViewport };
+export {
+  ToastProvider,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  ToastClose,
+  ToastViewport,
+};

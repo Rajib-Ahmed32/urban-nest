@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import axios from "../../services/apiClient";
 import { useAuth } from "../../context/AuthContext";
 import Message from "../../components/commonReusableComponents/Message";
 import ProfileCard from "../../components/commonReusableComponents/ProfileCard";
+import PageWrapper from "../../components/commonReusableComponents/PageWrapper";
 
 const fetchAdminOverview = async (token) => {
   const res = await axios.get("/agreements/apartment/overview", {
@@ -17,7 +18,6 @@ const fetchUserCounts = async (token) => {
   const res = await axios.get("/users/stats", {
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log(res.data);
   return res.data;
 };
 
@@ -91,7 +91,11 @@ const AdminProfile = () => {
     { label: "Total Members", value: userCountData.totalMembers },
   ];
 
-  return <ProfileCard user={user} data={profileData} />;
+  return (
+    <PageWrapper>
+      <ProfileCard user={user} data={profileData} />
+    </PageWrapper>
+  );
 };
 
 export default AdminProfile;

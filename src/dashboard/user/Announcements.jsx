@@ -4,7 +4,6 @@ import axios from "../../services/apiClient";
 import { useAuth } from "../../context/AuthContext";
 import { Loader2 } from "lucide-react";
 import Message from "../../components/commonReusableComponents/Message";
-import AnnouncementCard from "../../components/commonReusableComponents/AnnouncementCard";
 
 const fetchAnnouncements = async (token) => {
   const res = await axios.get("/announcements", {
@@ -64,20 +63,28 @@ const Announcements = ({ pageTitle = "Announcements" }) => {
   }
 
   return (
-    <div className="py-12 px-4 md:px-8 bg-[#f9f9f7] min-h-screen">
+    <div className="py-12 px-4 md:px-8 bg-[#f9f9f7]/50 min-h-screen">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-orange-600 mb-10">
           {pageTitle}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {announcements.map((a) => (
-            <AnnouncementCard
-              key={a._id}
-              title={a.title}
-              description={a.description}
-              createdAt={a.createdAt}
-            />
+        <div className="space-y-6">
+          {announcements.map(({ _id, title, description, createdAt }) => (
+            <div
+              key={_id}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition duration-200"
+            >
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                {title}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                {description}
+              </p>
+              <p className="text-xs text-gray-700 font-bold text-right">
+                Posted on {new Date(createdAt).toLocaleDateString()}
+              </p>
+            </div>
           ))}
         </div>
       </div>

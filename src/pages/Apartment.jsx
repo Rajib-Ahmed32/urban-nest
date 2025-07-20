@@ -11,9 +11,14 @@ import ApartmentsGrid from "../components/sharedLayoutComponents/apartment/Apart
 import { Button } from "@/components/ui/button";
 
 const fetchApartments = async ({ queryKey }) => {
-  const [_key, { minRent, maxRent, page, limit }] = queryKey;
+  const [_key, { minRent, maxRent, page, limit, token }] = queryKey;
+  console.log("Fetching apartments with:", minRent, maxRent, page, limit);
+
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
   const res = await axios.get("/apartments", {
     params: { minRent, maxRent, page, limit },
+    headers,
   });
   return res.data;
 };
@@ -32,6 +37,7 @@ export default function Apartment() {
   const [filter, setFilter] = useState({ minRent: "", maxRent: "" });
   const [agreeingId, setAgreeingId] = useState(null);
   const [userAgreement, setUserAgreement] = useState(null);
+  const [token, setToken] = useState(null);
 
   const { firebaseUser, loading } = useAuth();
   const navigate = useNavigate();
@@ -40,12 +46,20 @@ export default function Apartment() {
 
   const { toast } = useToast();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["apartments", { ...filter, page, limit }],
-    queryFn: fetchApartments,
-    keepPreviousData: true,
-  });
+  // Get Firebase token whenever user changes
+  useEffect(() => {
+    const fetchToken = async () => {
+      if (firebaseUser) {
+        const idToken = await firebaseUser.getIdToken();
+        setToken(idToken);
+      } else {
+        setToken(null);
+      }
+    };
+    fetchToken();
+  }, [firebaseUser]);
 
+  // Remove agreements cache if user logs out
   useEffect(() => {
     if (!firebaseUser) {
       setUserAgreement(null);
@@ -53,26 +67,32 @@ export default function Apartment() {
     }
   }, [firebaseUser, queryClient]);
 
+  // Fetch user agreement when token changes
   useEffect(() => {
     const getAgreement = async () => {
-      if (!firebaseUser) return;
+      if (!token) return;
 
-      const token = await firebaseUser.getIdToken();
-      const agreement = await fetchUserAgreement(token);
-      setUserAgreement(agreement);
+      try {
+        const agreement = await fetchUserAgreement(token);
+        setUserAgreement(agreement);
+      } catch (err) {
+        console.error("Failed to fetch user agreement:", err);
+      }
     };
     getAgreement();
-  }, [firebaseUser]);
+  }, [token]);
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-white" />
-      </div>
-    );
-  }
+  // Fetch apartments query with token included
+  const { data, error, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ["apartments", { ...filter, page, limit, token }],
+    queryFn: fetchApartments,
+    keepPreviousData: true,
+    enabled: token !== null || !firebaseUser, // fetch if no auth required or token ready
+    retry: 2,
+    staleTime: 1000 * 60 * 2, // 2 minutes cache
+  });
 
-  if (isLoading) {
+  if (loading || isLoading) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-white" />
@@ -106,12 +126,12 @@ export default function Apartment() {
 
     try {
       setAgreeingId(apartmentId);
-      const token = await firebaseUser.getIdToken();
+      const idToken = await firebaseUser.getIdToken();
 
       await axios.post(
         `/agreements/${apartmentId}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${idToken}` } }
       );
 
       toast({

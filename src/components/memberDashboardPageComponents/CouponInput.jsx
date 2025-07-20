@@ -44,7 +44,6 @@ const CouponInput = ({ rentAmount, onApply }) => {
           description: data.message || "Coupon is not valid",
           variant: "destructive",
         });
-
         onApply({ success: false });
       }
     } catch (err) {
@@ -54,7 +53,6 @@ const CouponInput = ({ rentAmount, onApply }) => {
         description: "Failed to validate coupon",
         variant: "destructive",
       });
-
       onApply({ success: false });
     } finally {
       setLoading(false);
@@ -77,15 +75,15 @@ const CouponInput = ({ rentAmount, onApply }) => {
           onChange={(e) => setCouponCode(e.target.value)}
           placeholder="Enter coupon code"
           disabled={loading}
-          className="flex-1 px-4 py-3 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          className="flex-1 px-4 py-3 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#ec5407]"
         />
         <button
           type="button"
           onClick={handleApplyCoupon}
           disabled={loading}
-          className="px-3 py-2 bg-[#373634] hover:bg-[#ec5407] text-white rounded-md text-[14px] font-bold"
+          className="px-4 py-2 bg-[#373634] hover:bg-[#ec5407] text-white rounded-md text-sm font-semibold transition"
         >
-          Apply
+          {loading ? "Applying..." : "Apply"}
         </button>
       </div>
     </div>

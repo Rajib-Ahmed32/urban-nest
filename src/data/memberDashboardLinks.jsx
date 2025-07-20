@@ -1,12 +1,13 @@
-import React from "react";
-import { User, CreditCard, ClipboardList, Megaphone } from "lucide-react";
+import {
+  User,
+  CreditCard,
+  ClipboardList,
+  Megaphone,
+  BellRing,
+} from "lucide-react";
 
 export const memberSidebarLinks = [
-  {
-    path: "/dashboard/member/profile",
-    label: "My Profile",
-    icon: <User />,
-  },
+  { path: "/dashboard/member/profile", label: "My Profile", icon: <User /> },
   {
     path: "/dashboard/member/make-payment",
     label: "Make Payment",
@@ -21,5 +22,10 @@ export const memberSidebarLinks = [
     path: "/dashboard/member/announcements",
     label: "Announcements",
     icon: <Megaphone />,
+  },
+  {
+    path: "/dashboard/member/member-notices",
+    label: "Rent Notices",
+    icon: <BellRing />,
   },
 ];

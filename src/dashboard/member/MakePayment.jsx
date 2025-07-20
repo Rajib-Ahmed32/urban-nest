@@ -42,18 +42,14 @@ const MakePayment = () => {
   const handlePay = () => {
     if (!selectedMonth) return alert("Please select a month");
     navigate("/dashboard/member/checkout", {
-      state: {
-        agreement,
-        month: selectedMonth,
-        token,
-      },
+      state: { agreement, month: selectedMonth, token },
     });
   };
 
   if (authLoading || isLoading) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-white" />
+      <div className="fixed inset-0 z-50 bg-white/60 flex items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-gray-700" />
       </div>
     );
   }
@@ -84,91 +80,41 @@ const MakePayment = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10">
+    <div className="max-w-3xl mx-auto px-4 py-10">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handlePay();
         }}
-        className="space-y-6 bg-[#f8f8f6] dark:bg-gray-900 border rounded-xl p-8 shadow-sm"
+        className="space-y-6 bg-white border border-gray-200 rounded-2xl shadow-sm p-8"
       >
-        <h1 className="text-2xl font-semibold text-center text-[#ec5407] mb-6">
+        <h1 className="text-2xl font-semibold text-center text-[#ec5407]">
           Make Rent Payment
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Member Email
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={agreement.userEmail}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Floor
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={agreement.floor}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Block Name
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={agreement.block}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Apartment / Room No
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={agreement.apartmentNo}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Rent Amount
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={`৳${agreement.rent}`}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-            />
-          </div>
+          <ReadOnlyInput label="Member Email" value={agreement.userEmail} />
+          <ReadOnlyInput label="Floor" value={agreement.floor} />
+          <ReadOnlyInput label="Block Name" value={agreement.block} />
+          <ReadOnlyInput
+            label="Apartment / Room No"
+            value={agreement.apartmentNo}
+          />
+          <ReadOnlyInput label="Rent Amount" value={`৳${agreement.rent}`} />
 
           <div>
             <label
               htmlFor="month"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
               Select Month
             </label>
             <select
               id="month"
+              required
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-md text-sm"
-              required
+              className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white"
             >
               <option value="">-- Choose a Month --</option>
               {months.map((month) => (
@@ -182,7 +128,7 @@ const MakePayment = () => {
 
         <button
           type="submit"
-          className="w-full bg-[#373634] hover:bg-[#bf3f06] text-white py-3 px-4 rounded-md text-sm mt-4"
+          className="w-fit px-6 bg-[#373634] hover:bg-[#bf3f06] text-white py-2 rounded-md text-sm font-medium transition duration-200 mx-auto block"
         >
           Pay Now
         </button>
@@ -190,5 +136,19 @@ const MakePayment = () => {
     </div>
   );
 };
+
+const ReadOnlyInput = ({ label, value }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <input
+      type="text"
+      readOnly
+      value={value}
+      className="w-full border border-gray-300 bg-gray-50 p-3 rounded-md text-sm text-gray-700"
+    />
+  </div>
+);
 
 export default MakePayment;

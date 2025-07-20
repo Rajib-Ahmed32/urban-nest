@@ -61,16 +61,26 @@ export default function AgreementRequests() {
 
   const handleAction = (id, action) => {
     mutation.mutate({ id, action });
-    toast({
-      title: `Agreement ${action === "accept" ? "Accepted" : "Rejected"}`,
-      variant: action === "accept" ? "default" : "destructive",
-    });
+
+    if (action === "accept") {
+      toast({
+        title: "Agreement Accepted",
+        description: "The agreement request has been approved successfully.",
+        variant: "default",
+      });
+    } else if (action === "reject") {
+      toast({
+        title: "Agreement Rejected",
+        description: "The agreement request has been rejected.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading || isLoading) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-white" />
+        <Loader2 className="h-10 w-10 animate-spin text-white" />
       </div>
     );
   }
@@ -84,49 +94,66 @@ export default function AgreementRequests() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Agreement Requests</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="max-w-5xl mx-auto bg-[#f9f9f7]/50 px-6 md:px-12 py-8">
+      <h1 className="text-2xl font-semibold mb-8 text-center text-[#ec5407]">
+        Agreement Requests
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {agreements.map((req) => (
           <div
             key={req._id}
-            className="bg-white shadow p-4 rounded-lg space-y-2 border"
+            className="bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <div>
-              <strong>Name:</strong> {req.userName}
-            </div>
-            <div>
-              <strong>Email:</strong> {req.userEmail}
-            </div>
-            <div>
-              <strong>Floor:</strong> {req.floor}
-            </div>
-            <div>
-              <strong>Block:</strong> {req.block}
-            </div>
-            <div>
-              <strong>Apartment No:</strong> {req.apartmentNo}
-            </div>
-            <div>
-              <strong>Rent:</strong> ${req.rent}
-            </div>
-            <div>
-              <strong>Date:</strong>{" "}
-              {new Date(req.createdAt).toLocaleDateString()}
+            <div className="space-y-2 text-gray-800 text-sm">
+              <div>
+                <span className="font-bold text-[#373634] mr-2">Name:</span>{" "}
+                <span className="font-medium">{req.userName}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">Email:</span>{" "}
+                <span className="font-medium">{req.userEmail}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">Floor:</span>{" "}
+                <span className="font-medium">{req.floor}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">Block:</span>{" "}
+                <span className="font-medium">{req.block}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">
+                  Apartment No:
+                </span>{" "}
+                <span className="font-medium">{req.apartmentNo}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">Rent:</span>{" "}
+                <span className="font-medium">${req.rent}</span>
+              </div>
+              <div>
+                <span className="font-bold text-[#373634] mr-2">
+                  Request Date:
+                </span>{" "}
+                <span className="font-medium">
+                  {new Date(req.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </div>
 
-            <div className="flex gap-4 mt-4">
+            <div className="flex justify-end gap-3 mt-6">
               <Button
-                className="bg-green-600 hover:bg-green-700"
-                onClick={() => handleAction(req._id, "accept")}
-              >
-                Accept
-              </Button>
-              <Button
-                className="bg-red-600 hover:bg-red-700"
                 onClick={() => handleAction(req._id, "reject")}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-md text-xs shadow-sm"
               >
                 Reject
+              </Button>
+              <Button
+                onClick={() => handleAction(req._id, "accept")}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md text-xs shadow-sm"
+              >
+                Accept
               </Button>
             </div>
           </div>
