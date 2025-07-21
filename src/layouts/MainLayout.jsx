@@ -10,7 +10,7 @@ const MainLayout = () => {
         <header className="sticky top-0 z-50 bg-[#eaedf0] shadow">
           <Navbar />
         </header>
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <main className="flex-1 max-w-7xl w-full mx-auto md:px-4">
           <Outlet />
         </main>
         <footer className="bg-[#373536] text-white py-6 text-center text-sm">

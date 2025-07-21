@@ -174,7 +174,7 @@ const ManageCoupons = () => {
               <div className="flex justify-center items-center pt-2">
                 <Button
                   type="submit"
-                  className="py-3 px-6 bg-[#373634] text-white hover:opacity-90"
+                  className="py-3 px-6 rounded-md bg-[#373634] text-white hover:opacity-90"
                 >
                   Submit
                 </Button>

@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Luxury Living in Urban Heights",
+    "description": "Experience high-rise comfort with modern amenities and stunning city views.",
+    "image": "/images/apartment-1.jpg"
+  },
+  {
+    "title": "Family-Friendly Apartments",
+    "description": "Spacious and secure apartments designed with your family in mind.",
+    "image": "/images/apartment-2.webp"
+  },
+  {
+    "title": "Smart Homes, Smarter Living",
+    "description": "Integrate your lifestyle with our advanced smart home technologies.",
+    "image": "/images/apartment-3.avif"
+  },
+  {
+    "title": "Elegant Architecture Meets Affordability",
+    "description": "Live in style without breaking the bank in our modern residences.",
+    "image": "/images/apartment-4.jpg"
+  },
+  {
+    "title": "Peaceful Living in Green Surroundings",
+    "description": "Breathe fresh and live calm in our eco-friendly apartment complexes.",
+    "image": "/images/apartment-5.jpg"
+  }
+]

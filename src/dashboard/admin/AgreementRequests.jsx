@@ -130,7 +130,7 @@ export default function AgreementRequests() {
               </div>
               <div>
                 <span className="font-bold text-[#373634] mr-2">Rent:</span>{" "}
-                <span className="font-medium">${req.rent}</span>
+                <span className="font-medium">{req.rent} ৳</span>
               </div>
               <div>
                 <span className="font-bold text-[#373634] mr-2">
