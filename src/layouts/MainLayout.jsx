@@ -6,11 +6,11 @@ import { ToastProviderWrapper } from "../components/ui/use-toast";
 const MainLayout = () => {
   return (
     <ToastProviderWrapper>
-      <div className="min-h-screen flex flex-col bg-[#eaedf0]">
+      <div className="flex flex-col">
         <header className="sticky top-0 z-50 bg-[#eaedf0] shadow">
           <Navbar />
         </header>
-        <main className="flex-1 max-w-7xl w-full mx-auto md:px-4">
+        <main className="w-full mx-auto">
           <Outlet />
         </main>
         <footer className="bg-[#373536] text-white py-6 text-center text-sm">
