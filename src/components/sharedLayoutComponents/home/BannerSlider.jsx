@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 function BannerSlider() {
   return (
-    <div className="w-full bg-white dark:bg-gray-900 rounded-md px-4 md:px-8">
+    <div className="w-full bg-white dark:bg-gray-900 rounded-md md:px-8">
       <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={30}

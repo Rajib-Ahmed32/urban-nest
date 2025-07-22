@@ -82,14 +82,13 @@ export default function Apartment() {
     getAgreement();
   }, [token]);
 
-  // Fetch apartments query with token included
   const { data, error, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["apartments", { ...filter, page, limit, token }],
     queryFn: fetchApartments,
     keepPreviousData: true,
-    enabled: token !== null || !firebaseUser, // fetch if no auth required or token ready
+    enabled: token !== null || !firebaseUser,
     retry: 2,
-    staleTime: 1000 * 60 * 2, // 2 minutes cache
+    staleTime: 1000 * 60 * 2,
   });
 
   if (loading || isLoading) {
@@ -160,7 +159,7 @@ export default function Apartment() {
 
   return (
     <div className="bg-[#eaedf0]">
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="pb-24 pt-12 max-w-7xl mx-auto">
         <RentFilter
           minRent={minRent}
           maxRent={maxRent}
