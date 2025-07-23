@@ -79,8 +79,8 @@ export default function AgreementRequests() {
 
   if (loading || isLoading) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-white" />
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-[#ec5407]" />
       </div>
     );
   }

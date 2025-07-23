@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Loader2 } from "lucide-react";
 
 const ManageCoupons = () => {
   const { firebaseUser } = useAuth();
@@ -121,8 +122,16 @@ const ManageCoupons = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 flex justify-center items-center dark:bg-gray-900">
+        <Loader2 className="w-10 h-10 animate-spin text-[#ec5407]" />
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 bg-white rounded-2xl shadow-md">
+    <div className="max-w-5xl mx-auto px-6 py-12 bg-white dark:bg-gray-950 rounded-2xl shadow-md">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-[#ec5407]">
           Manage Coupons
@@ -133,7 +142,7 @@ const ManageCoupons = () => {
               + Add Coupon
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md rounded-xl p-6 bg-[#f9f9f7]">
+          <DialogContent className="sm:max-w-md rounded-xl p-6 bg-[#f9f9f7] dark:bg-gray-900">
             <DialogHeader>
               <DialogTitle className="text-lg text-[#ec5407] font-semibold">
                 Add New Coupon
@@ -141,7 +150,9 @@ const ManageCoupons = () => {
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               <div>
-                <Label className="text-sm text-gray-700">Coupon Code</Label>
+                <Label className="text-sm text-gray-700 dark:text-gray-200">
+                  Coupon Code
+                </Label>
                 <Input
                   value={form.code}
                   onChange={(e) => setForm({ ...form, code: e.target.value })}
@@ -149,7 +160,7 @@ const ManageCoupons = () => {
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-700">
+                <Label className="text-sm text-gray-700 dark:text-gray-200">
                   Discount Percentage
                 </Label>
                 <Input
@@ -163,7 +174,9 @@ const ManageCoupons = () => {
                 />
               </div>
               <div>
-                <Label className="text-sm text-gray-700">Description</Label>
+                <Label className="text-sm text-gray-700 dark:text-gray-200">
+                  Description
+                </Label>
                 <Input
                   value={form.description}
                   onChange={(e) =>
@@ -184,9 +197,9 @@ const ManageCoupons = () => {
         </Dialog>
       </div>
 
-      <div className="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
-        <table className="min-w-full text-sm text-gray-800">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
+        <table className="min-w-full text-sm text-gray-800 dark:text-gray-100">
+          <thead className="bg-gray-100 dark:bg-gray-800">
             <tr className="text-left">
               <th className="px-4 py-3">Code</th>
               <th className="px-4 py-3">Discount %</th>
@@ -196,13 +209,7 @@ const ManageCoupons = () => {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={5} className="text-center py-6">
-                  Loading...
-                </td>
-              </tr>
-            ) : coupons.length === 0 ? (
+            {coupons.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-center py-6">
                   No coupons found.
@@ -212,7 +219,11 @@ const ManageCoupons = () => {
               coupons.map((coupon, idx) => (
                 <tr
                   key={coupon._id}
-                  className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                  className={`${
+                    idx % 2 === 0
+                      ? "bg-white dark:bg-gray-900"
+                      : "bg-gray-50 dark:bg-gray-800"
+                  }`}
                 >
                   <td className="px-4 py-3 font-medium">{coupon.code}</td>
                   <td className="px-4 py-3">{coupon.percentage}%</td>

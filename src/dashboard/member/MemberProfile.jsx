@@ -23,7 +23,6 @@ const MemberProfile = () => {
     const getToken = async () => {
       if (firebaseUser) {
         const fetchedToken = await firebaseUser.getIdToken();
-        console.log("Fetched Firebase token:", fetchedToken);
         setToken(fetchedToken);
       } else {
         setToken(null);
@@ -44,7 +43,7 @@ const MemberProfile = () => {
   if (loading || isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white/70 z-50">
-        <Loader2 className="h-10 w-10 animate-spin text-[#dd4b08]" />
+        <Loader2 className="h-10 w-10 animate-spin text-[#ec5407]" />
       </div>
     );
   }
@@ -75,7 +74,11 @@ const MemberProfile = () => {
     { label: "Status", value: data.status },
   ];
 
-  return <ProfileCard user={user} data={profileData} />;
+  return (
+    <div className="px-4 md:px-0">
+      <ProfileCard user={user} data={profileData} />;
+    </div>
+  );
 };
 
 export default MemberProfile;

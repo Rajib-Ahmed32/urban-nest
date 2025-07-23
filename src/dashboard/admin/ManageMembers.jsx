@@ -47,7 +47,6 @@ const ManageMembers = () => {
   const { mutate: removeMember } = useMutation({
     mutationFn: async (email) => {
       setRemovingEmail(email);
-
       await axios.patch(
         `/remove-member/${email}`,
         {},
@@ -77,8 +76,8 @@ const ManageMembers = () => {
       const name = removedMember?.name || email;
 
       toast({
-        title: "Member Access Removed",
-        description: `${name} has been removed as a member and now has user access only.`,
+        title: "Member Removed",
+        description: `${name} has been downgraded to user.`,
         variant: "success",
         duration: 3000,
       });
@@ -88,7 +87,7 @@ const ManageMembers = () => {
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to remove member to user",
+        description: "Failed to remove member access.",
         variant: "destructive",
       });
       setRemovingEmail(null);
@@ -97,8 +96,8 @@ const ManageMembers = () => {
 
   if (authLoading || isLoading) {
     return (
-      <div className="flex justify-center items-center h-40">
-        <Loader2 className="animate-spin w-6 h-6 text-gray-500" />
+      <div className="fixed inset-0 z-50 flex justify-center items-center bg-white dark:bg-gray-900">
+        <Loader2 className="w-10 h-10 animate-spin text-[#ec5407]" />
       </div>
     );
   }
@@ -111,70 +110,72 @@ const ManageMembers = () => {
 
   return (
     <PageWrapper>
-      <Card className="shadow-lg border rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-orange-600 text-center">
+      <Card className="shadow-xl border border-gray-200 dark:border-gray-700 rounded-2xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-[#ec5407]">
             Manage Members
           </CardTitle>
         </CardHeader>
+
         <CardContent>
           {members.length === 0 ? (
-            <Message type="info" text="No records found." />
+            <Message type="info" text="No members found." />
           ) : (
-            <>
-              <div className="overflow-x-auto rounded-lg">
-                <table className="w-full text-sm text-left border-separate border-spacing-y-2">
-                  <thead className="bg-gray-50 text-gray-600 font-medium text-xs">
-                    <tr>
-                      <th className="px-4 py-2">Name</th>
-                      <th className="px-4 py-2">Email</th>
-                      <th className="px-4 py-2 text-right">Action</th>
+            <div className="overflow-x-auto rounded-lg border border-gray-100 dark:border-gray-800">
+              <table className="w-full text-sm text-left border-separate border-spacing-y-2">
+                <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-semibold">
+                  <tr>
+                    <th className="px-4 py-2">Name</th>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {members.map((member) => (
+                    <tr
+                      key={member._id}
+                      className="bg-white dark:bg-gray-900 hover:shadow transition rounded-md"
+                    >
+                      <td className="px-4 py-3 rounded-l-md font-medium text-gray-900 dark:text-white">
+                        {member.name}
+                      </td>
+                      <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
+                        {member.email}
+                      </td>
+                      <td className="px-4 py-3 text-right rounded-r-md">
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={removingEmail === member.email}
+                          onClick={() => removeMember(member.email)}
+                          className="gap-1"
+                        >
+                          {removingEmail === member.email ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Removing...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="w-4 h-4" />
+                              Remove
+                            </>
+                          )}
+                        </Button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {members.map((member) => (
-                      <tr
-                        key={member._id}
-                        className="bg-white hover:shadow-md transition-shadow rounded-md"
-                      >
-                        <td className="px-4 py-3 rounded-l-md">
-                          {member.name}
-                        </td>
-                        <td className="px-4 py-3">{member.email}</td>
-                        <td className="px-4 py-3 text-right rounded-r-md">
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            disabled={removingEmail === member.email}
-                            onClick={() => removeMember(member.email)}
-                          >
-                            {removingEmail === member.email ? (
-                              <>
-                                <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                                Removing...
-                              </>
-                            ) : (
-                              <>
-                                <Trash2 className="w-4 h-4 mr-1" />
-                                Remove
-                              </>
-                            )}
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-              {confirmationMsg && (
-                <div className="mt-6 flex justify-center">
-                  <div className="text-sm bg-green-100 border border-green-300 text-green-700 px-4 py-2 rounded-md shadow-sm">
-                    {confirmationMsg}
-                  </div>
-                </div>
-              )}
-            </>
+          {confirmationMsg && (
+            <div className="mt-6 flex justify-center">
+              <div className="text-sm bg-green-100 border border-green-300 text-green-700 px-4 py-2 rounded-md shadow-sm">
+                {confirmationMsg}
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>

@@ -60,14 +60,14 @@ const CouponInput = ({ rentAmount, onApply }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <label
         htmlFor="coupon"
         className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
       >
         Coupon Code (optional)
       </label>
-      <div className="flex gap-2">
+      <div className="flex flex-col md:flex-row md:items-center gap-3">
         <input
           id="coupon"
           type="text"
@@ -77,14 +77,16 @@ const CouponInput = ({ rentAmount, onApply }) => {
           disabled={loading}
           className="flex-1 px-4 py-3 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#ec5407]"
         />
-        <button
-          type="button"
-          onClick={handleApplyCoupon}
-          disabled={loading}
-          className="px-4 py-2 bg-[#373634] hover:bg-[#ec5407] text-white rounded-md text-sm font-semibold transition"
-        >
-          {loading ? "Applying..." : "Apply"}
-        </button>
+        <div className="flex justify-center md:justify-start">
+          <button
+            type="button"
+            onClick={handleApplyCoupon}
+            disabled={loading}
+            className="w-[100px] h-[40px] bg-[#373634] hover:bg-[#ec5407] text-white rounded-md text-sm font-semibold transition"
+          >
+            {loading ? "..." : "Apply"}
+          </button>
+        </div>
       </div>
     </div>
   );

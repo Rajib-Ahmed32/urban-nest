@@ -17,7 +17,7 @@ const PaymentCheckoutPage = () => {
   }
 
   return (
-    <div className="p-8 max-w-lg mx-auto rounded-lg bg-white dark:bg-gray-900 shadow-lg">
+    <div className="p-4 mt-12 md:mt-0 md:p-8 max-w-lg mx-auto rounded-lg dark:bg-gray-900">
       <Elements stripe={stripePromise}>
         <PaymentCheckout agreement={agreement} month={month} token={token} />
       </Elements>

@@ -27,7 +27,7 @@ const UserDashboardLayout = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 lg:px-10 py-10 md:py-14 bg-[#eaedf0]">
-          <div className="max-w-screen-2xl mx-auto space-y-6">
+          <div className="max-w-screen-2xl mx-auto py-12 md:py-0 space-y-6">
             <Outlet />
           </div>
         </main>

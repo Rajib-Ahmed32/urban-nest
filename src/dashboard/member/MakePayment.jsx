@@ -49,7 +49,7 @@ const MakePayment = () => {
   if (authLoading || isLoading) {
     return (
       <div className="fixed inset-0 z-50 bg-white/60 flex items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-gray-700" />
+        <Loader2 className="h-10 w-10 animate-spin text-[#ec5407]" />
       </div>
     );
   }
@@ -86,7 +86,7 @@ const MakePayment = () => {
           e.preventDefault();
           handlePay();
         }}
-        className="space-y-6 bg-white border border-gray-200 rounded-2xl shadow-sm p-8"
+        className="space-y-10 bg-white border border-gray-200 rounded-2xl shadow-sm px-4 py-8 md:px-8"
       >
         <h1 className="text-2xl font-semibold text-center text-[#ec5407]">
           Make Rent Payment

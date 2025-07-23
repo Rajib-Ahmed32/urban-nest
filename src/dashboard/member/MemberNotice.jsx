@@ -58,8 +58,8 @@ const MemberNotice = () => {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-8 px-4">
-      <Card className="p-8 rounded-2xl shadow-md border border-gray-200 bg-white dark:bg-gray-900">
+    <div className="max-w-xl mx-auto mt-12 px-4">
+      <Card className="p-4 py-4 md:p-8 rounded-2xl shadow-md border border-gray-200 bg-white dark:bg-gray-900">
         <div className="flex items-center gap-3 mb-6">
           <Megaphone className="text-[#ec5407] w-7 h-7" />
           <CardTitle className="text-2xl font-semibold text-[#ec5407] dark:text-white">

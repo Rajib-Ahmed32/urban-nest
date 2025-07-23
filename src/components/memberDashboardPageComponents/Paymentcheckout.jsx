@@ -150,7 +150,7 @@ const PaymentCheckout = ({ agreement, month, token }) => {
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="dark:bg-gray-900 p-6 rounded-lg flex items-center gap-3">
-            <Loader2 className="animate-spin text-orange-600" size={24} />
+            <Loader2 className="animate-spin text-[#ec5407]" size={24} />
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               Processing Payment...
             </span>
@@ -160,7 +160,7 @@ const PaymentCheckout = ({ agreement, month, token }) => {
 
       <form
         onSubmit={handleCheckout}
-        className="max-w-md mx-auto bg-white dark:bg-gray-900 p-8 rounded-lg space-y-6"
+        className="max-w-md mx-auto bg-white py-8 dark:bg-gray-900 px-4 md:p-8 rounded-lg space-y-6 shadow-lg"
       >
         <h2 className="text-2xl font-semibold text-center text-[#ec5407] dark:text-white">
           Complete Your Payment
@@ -194,7 +194,8 @@ const PaymentCheckout = ({ agreement, month, token }) => {
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" /> Processing...
+              <Loader2 className="h-4 w-4 animate-spin text-[#ec5407]" />{" "}
+              Processing...
             </span>
           ) : couponApplied ? (
             `Pay ৳${Math.round(

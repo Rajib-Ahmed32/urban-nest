@@ -6,7 +6,7 @@ import PageWrapper from "../../components/commonReusableComponents/PageWrapper";
 const ProfileCard = ({ user, data = [], avatarSize = "w-20 h-20" }) => {
   return (
     <PageWrapper>
-      <div className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-3xl shadow-lg p-10 flex flex-col md:flex-row gap-14 items-center transition-all duration-300">
+      <div className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-3xl shadow-lg p-6 md:p-10 flex flex-col md:flex-row gap-14 items-center transition-all duration-300">
         <div className="flex-1 flex flex-col items-center text-center space-y-2">
           <Avatar className={`${avatarSize} shadow-md ring-2 ring-orange-500`}>
             <AvatarImage src={user?.photoURL} alt="Profile" />

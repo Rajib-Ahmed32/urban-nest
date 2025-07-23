@@ -2,6 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "../../../services/apiClient";
 import Message from "../../commonReusableComponents/Message";
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
 
 const fetchCoupons = async () => {
   const res = await axios.get("/coupons/public/all");
@@ -51,11 +73,17 @@ const Coupons = () => {
             paddingY="py-14"
           />
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {coupons.map((coupon, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="rounded-2xl border shadow-md p-6 bg-white transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="rounded-2xl border shadow-md p-6 bg-white hover:-translate-y-1 hover:shadow-xl transition-transform duration-300"
+                variants={cardVariants}
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs uppercase tracking-widest text-gray-500">
@@ -71,9 +99,9 @@ const Coupons = () => {
                 <p className="text-gray-600 leading-relaxed">
                   {coupon.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

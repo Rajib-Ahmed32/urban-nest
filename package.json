@@ -29,6 +29,7 @@
     "embla-carousel-react": "^8.6.0",
     "firebase": "^11.10.0",
     "flowbite": "^3.1.2",
+    "framer-motion": "^12.23.7",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
     "moment": "^2.30.1",
