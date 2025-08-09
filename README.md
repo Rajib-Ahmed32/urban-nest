@@ -4,7 +4,6 @@ A modern full-stack **Building Management System (BMS)** for managing residentia
 
 Live Demo: [🌐 Urban Nest on Netlify](https://ubiquitous-gingersnap-59b4fd.netlify.app/)
 
----
 
 ## ✨ Features
 
@@ -85,5 +84,11 @@ Live Demo: [🌐 Urban Nest on Netlify](https://ubiquitous-gingersnap-59b4fd.net
 - **Custom Express.js API** – CRUD, protected endpoints
 - **MongoDB** – Database for apartments, agreements, payments, and coupons
 
----
+
+## 🚀 Getting Started
+
+1. Clone the repo:  
+   ```bash
+   git clone https://github.com/Rajib-Ahmed32/urban-nest.git
+
 
